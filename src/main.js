@@ -1,90 +1,49 @@
-import { fetchImages } from './js/pixabay-api';
-import { renderGallery, clearGallery } from './js/render-functions.js';
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+// // import Swiper JS
+// import Swiper from 'swiper';
+// // import Swiper styles
+// import 'swiper/css';
 
-const searchForm = document.getElementById('search-form');
-const searchInput = document.getElementById('search-input');
-const gallery = document.getElementById('gallery');
-const loadMoreButton = document.getElementById('load-more');
-const loader = document.getElementById('loader');
-
-let currentPage = 1;
-let currentQuery = '';
-let lightbox = new SimpleLightbox('.gallery a');
-
-searchForm.addEventListener('submit', async e => {
-  e.preventDefault();
-  currentQuery = searchInput.value.trim();
-
-  if (!currentQuery) {
-    iziToast.error({ title: 'Error', message: 'Please enter a search term' });
-    return;
-  }
-
-  currentPage = 1;
-  clearGallery();
-  loadMoreButton.style.display = 'none';
-
-  try {
-    toggleLoader(true);
-    const data = await fetchImages(currentQuery, currentPage);
-    if (data.hits.length === 0) {
-      iziToast.info({
-        title: 'Info',
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-      });
-    } else {
-      renderGallery(data.hits);
-      lightbox.refresh();
-      loadMoreButton.style.display = 'block';
-    }
-  } catch (error) {
-    iziToast.error({
-      title: 'Error',
-      message: 'Something went wrong. Please try again later.',
-    });
-  } finally {
-    toggleLoader(false);
-  }
-});
-
-loadMoreButton.addEventListener('click', async () => {
-  currentPage += 1;
-
-  try {
-    toggleLoader(true);
-    const data = await fetchImages(currentQuery, currentPage);
-    renderGallery(data.hits);
-    lightbox.refresh();
-
-    const { height: cardHeight } =
-      gallery.firstElementChild.getBoundingClientRect();
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: 'smooth',
-    });
-
-    if (data.hits.length < 15) {
-      loadMoreButton.style.display = 'none';
-      iziToast.info({
-        title: 'Info',
-        message: "We're sorry, but you've reached the end of search results.",
-      });
-    }
-  } catch (error) {
-    iziToast.error({
-      title: 'Error',
-      message: 'Something went wrong. Please try again later.',
-    });
-  } finally {
-    toggleLoader(false);
-  }
-});
-
-function toggleLoader(show) {
-  loader.style.display = show ? 'block' : 'none';
-}
+// const swiper = new Swiper('.projects-wrapper', {
+//   slidesPerView: 1,
+//   spaceBetween: 30,
+//   navigation: {
+//     nextEl: '.swiper-button-next',
+//     prevEl: '.swiper-button-prev',
+//   },
+//   keyboard: {
+//     enabled: true,
+//     onlyInViewport: false,
+//   },
+//   on: {
+//     init: function () {
+//       this.slides[0].style.opacity = 1;
+//       this.slides[0].style.visibility = 'visible';
+//     },
+//     slideChangeTransitionEnd: function () {
+//       this.slides.forEach(slide => {
+//         slide.style.opacity = 0;
+//         slide.style.visibility = 'hidden';
+//       });
+//       this.slides[this.activeIndex].style.opacity = 1;
+//       this.slides[this.activeIndex].style.visibility = 'visible';
+//     },
+//     reachBeginning: function () {
+//       document
+//         .querySelector('.swiper-button-prev')
+//         .classList.add('swiper-button-disabled');
+//     },
+//     reachEnd: function () {
+//       document
+//         .querySelector('.swiper-button-next')
+//         .classList.add('swiper-button-disabled');
+//     },
+//     fromEdge: function () {
+//       document
+//         .querySelector('.swiper-button-next')
+//         .classList.remove('swiper-button-disabled');
+//       document
+//         .querySelector('.swiper-button-prev')
+//         .classList.remove('swiper-button-disabled');
+//     },
+//   },
+// });
